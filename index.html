@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Anderson Almeida | Luxury Real Estate</title>
+
+    <!-- Fonte: Montserrat (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Ícones: FontAwesome (CDN) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      /* 
+         * =========================================
+         * 1. CONFIGURAÇÕES GERAIS E VARIÁVEIS
+         * =========================================
+         */
+      :root {
+        --primary-gold: #d4af37; /* Dourado Premium */
+        --primary-gold-dark: #aa8c2c; /* Dourado Escuro para Hover */
+        --text-white: #ffffff;
+        --text-gray: #e0e0e0;
+        --glass-bg: rgba(255, 255, 255, 0.05); /* Fundo vidro muito sutil */
+        --glass-border: rgba(255, 255, 255, 0.15); /* Borda vidro */
+        --glass-blur: 20px; /* Intensidade do desfoque */
+        --card-radius: 24px;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: #050505; /* Fallback */
+        color: var(--text-white);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Alinhado ao topo para scroll em mobile */
+        overflow-x: hidden;
+        padding: 20px 0;
+      }
+
+      /* 
+         * =========================================
+         * 2. BACKGROUND E EFEITOS VISUAIS
+         * =========================================
+         */
+      /* Imagem de Fundo Fixa */
+      .bg-fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        background: url("https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+          no-repeat center center/cover;
+      }
+
+      /* Overlay Escuro para Contraste */
+      .bg-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: rgba(0, 0, 0, 0.75); /* Escurece 75% */
+        backdrop-filter: blur(5px);
+      }
+
+      /* 
+         * =========================================
+         * 3. CONTAINER PRINCIPAL (CARTÃO DE VIDRO)
+         * =========================================
+         */
+      .glass-card {
+        width: 90%;
+        max-width: 420px; /* Largura ideal para mobile */
+        margin: 0 auto;
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border: 1px solid var(--glass-border);
+        border-radius: var(--card-radius);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        padding: 40px 24px;
+        text-align: center;
+
+        /* Animação de Entrada */
+        opacity: 0;
+        transform: translateY(30px);
+        animation: slideUpFade 1s ease forwards;
+      }
+
+      @keyframes slideUpFade {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 
+         * =========================================
+         * 4. SEÇÃO DE PERFIL
+         * =========================================
+         */
+      .profile-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+      }
+
+      .profile-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-gold);
+        padding: 4px; /* Espaço entre a borda e a foto */
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .verified-badge {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: var(--primary-gold);
+        color: #000;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        border: 2px solid #1a1a1a;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 5px;
+        letter-spacing: -0.5px;
+      }
+
+      h2 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--primary-gold);
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .bio {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-gray);
+        margin-bottom: 35px;
+        font-weight: 300;
+      }
+
+      /* 
+         * =========================================
+         * 5. BOTÕES DE AÇÃO (GRID)
+         * =========================================
+         */
+      .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 Colunas */
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .btn-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 18px;
+        text-decoration: none;
+        color: var(--text-white);
+        transition: var(--transition);
+      }
+
+      .btn-action i {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+        color: var(--primary-gold);
+        transition: var(--transition);
+      }
+
+      .btn-action span {
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      /* Efeito Hover nos botões de grid */
+      .btn-action:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+        border-color: var(--primary-gold);
+      }
+
+      .btn-action:hover i {
+        transform: scale(1.1);
+      }
+
+      /* 
+         * =========================================
+         * 6. BOTÃO DE DESTAQUE (SALVAR CONTATO)
+         * =========================================
+         */
+      .btn-save {
+        width: 100%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-gold) 0%,
+          #b5952f 100%
+        );
+        color: #000;
+        border: none;
+        padding: 18px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 35px;
+        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+        transition: var(--transition);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-save:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+      }
+
+      .btn-save:active {
+        transform: scale(0.98);
+      }
+
+      /* 
+         * =========================================
+         * 7. CARD DE IMÓVEL EM DESTAQUE
+         * =========================================
+         */
+      .property-card {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        text-align: left;
+        margin-bottom: 30px;
+        transition: var(--transition);
+      }
+
+      .property-card:hover {
+        border-color: var(--primary-gold);
+        transform: translateY(-2px);
+      }
+
+      .property-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .property-content {
+        padding: 15px 20px;
+      }
+
+      .tag {
+        background-color: var(--primary-gold);
+        color: #000;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 8px;
+      }
+
+      .property-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--text-white);
+      }
+
+      .link-details {
+        font-size: 0.85rem;
+        color: var(--primary-gold);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .link-details:hover {
+        text-decoration: underline;
+      }
+
+      /* 
+         * =========================================
+         * 8. RODAPÉ
+         * =========================================
+         */
+      .footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 25px;
+        margin-top: 10px;
+      }
+
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-bottom: 15px;
+      }
+
+      .social-icons a {
+        color: var(--text-gray);
+        font-size: 1.3rem;
+        transition: var(--transition);
+      }
+
+      .social-icons a:hover {
+        color: var(--primary-gold);
+        transform: translateY(-3px);
+      }
+
+      .copyright {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 300;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Fundo Fixo -->
+    <div class="bg-fixed"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Container Principal (Glassmorphism) -->
+    <main class="glass-card">
+      <!-- 1. Topo: Perfil -->
+      <header>
+        <div class="profile-wrapper">
+          <!-- Imagem Placeholder de um homem de terno -->
+          <img
+            src="imagens/fotoalmeidaanderson.png"
+            alt="Foto de Anderson Almeida"
+            class="profile-img"
+          />
+          <div class="verified-badge">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+
+        <h1>Anderson Almeida</h1>
+        <h2>Corretor de Imóveis de Luxo</h2>
+        <p class="bio">
+          Transformando sonhos em endereços exclusivos.<br />Especialista em
+          alto padrão.
+        </p>
+      </header>
+
+      <!-- 2. Grade de Ações -->
+      <nav class="actions-grid">
+        <a
+          href="https://wa.me/5524981029084"
+          target="_blank"
+          class="btn-action"
+        >
+          <i class="fab fa-whatsapp"></i>
+          <span>WhatsApp</span>
+        </a>
+        <a href="https://maps.google.com" target="_blank" class="btn-action">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Localização</span>
+        </a>
+        <a href="mailto:profandersonalmeidainf@gmail.com" class="btn-action">
+          <i class="fas fa-envelope"></i>
+          <span>E-mail</span>
+        </a>
+        <a href="#" class="btn-action">
+          <i class="fas fa-globe"></i>
+          <span>Site Oficial</span>
+        </a>
+      </nav>
+
+      <!-- 3. Botão de Destaque: Salvar Contato -->
+      <button id="vcardBtn" class="btn-save" onclick="generateVCard()">
+        <i class="fas fa-user-plus"></i>
+        <span>SALVAR NA AGENDA</span>
+      </button>
+
+      <!-- 4. Destaque de Imóvel -->
+      <section class="property-card">
+        <img
+          src="imagens/fotomansaojardins.jpg"
+          alt="Mansão Jardins"
+          class="property-img"
+        />
+        <div class="property-content">
+          <span class="tag">Oportunidade</span>
+          <h3 class="property-title">Mansão Jardins | 850m²</h3>
+          <a href="#" class="link-details"
+            >Ver Detalhes <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+      </section>
+
+      <!-- 5. Rodapé -->
+      <footer class="footer">
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" aria-label="LinkedIn"
+            ><i class="fab fa-linkedin-in"></i
+          ></a>
+          <a href="#" aria-label="Facebook"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+        </div>
+        <p class="copyright">
+          © 2025 Ricardo Montanari.<br />Todos os direitos reservados.
+        </p>
+      </footer>
+    </main>
+
+    <!-- Script Funcional (VCard) -->
+    <script>
+      function generateVCard() {
+        // Dados para o contato
+        const contact = {
+          firstName: "Ricardo",
+          lastName: "Montanari",
+          org: "Imóveis de Luxo",
+          title: "Corretor de Alto Padrão",
+          phone: "+5511999999999",
+          email: "contato@imoveisdeluxo.com",
+          website: "https://www.imoveisdeluxo.com",
+        };
+
+        // Construção do arquivo .vcf (Versão 3.0 para compatibilidade)
+        const vCardContent = [
+          "BEGIN:VCARD",
+          "VERSION:3.0",
+          `N:${contact.lastName};${contact.firstName};;;`,
+          `FN:${contact.firstName} ${contact.lastName}`,
+          `ORG:${contact.org}`,
+          `TITLE:${contact.title}`,
+          `TEL;TYPE=CELL:${contact.phone}`,
+          `EMAIL;TYPE=WORK:${contact.email}`,
+          `URL:${contact.website}`,
+          "END:VCARD",
+        ].join("\n");
+
+        // Criar o Blob
+        const blob = new Blob([vCardContent], {
+          type: "text/vcard;charset=utf-8",
+        });
+
+        // Criar URL temporária
+        const url = window.URL.createObjectURL(blob);
+
+        // Criar link invisível para download
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `${contact.firstName}_${contact.lastName}.vcf`
+        );
+        document.body.appendChild(link);
+
+        // Clicar no link
+        link.click();
+
+        // Limpar
+        document.body.removeChild(link);
+
+        // Feedback Visual no Botão
+        const btn = document.getElementById("vcardBtn");
+        const originalHTML = btn.innerHTML;
+
+        btn.style.background = "#2ecc71"; // Verde sucesso
+        btn.style.color = "#fff";
+        btn.innerHTML = '<i class="fas fa-check"></i> <span>BAIXADO!</span>';
+
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.style.background = ""; // Volta ao gradiente original
+          btn.style.color = "";
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
